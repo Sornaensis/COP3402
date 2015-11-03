@@ -89,7 +89,7 @@ static string __parserrors[1] = {"Generic error has occured"};
 
 // ** Nonterminal Parsers **//
 
-bool parse_program(plParser *ps)       
+bool parse_program(plParser *ps)
 {
     RUN_PARSER(parse_block(ps),0);
     RUN_PARSER(parsesym(ps, periodsym),0);
@@ -97,7 +97,7 @@ bool parse_program(plParser *ps)
     return true;
 }
 
-bool parse_block(plParser *ps)         
+bool parse_block(plParser *ps)
 {
     ps->current = add_parsetree_child(ps->current, BLOCK_NODE);
     ParseTree *me = ps->current;
@@ -107,8 +107,8 @@ bool parse_block(plParser *ps)
     parse_var_dec(ps);
     ps->current = me;
 
-    while(parse_proc_dec(ps)) 
-    { 
+    while(parse_proc_dec(ps))
+    {
         ps->current = me;
     }
 
@@ -118,7 +118,7 @@ bool parse_block(plParser *ps)
     return true;
 }
 
-bool parse_const_dec(plParser *ps)     
+bool parse_const_dec(plParser *ps)
 {
     if(!parsesym(ps, constsym))
         return false;
@@ -150,7 +150,7 @@ bool parse_const_dec(plParser *ps)
     return true;
 }
 
-bool parse_var_dec(plParser *ps)       
+bool parse_var_dec(plParser *ps)
 {
     if(!parsesym(ps, varsym))
         return false;
@@ -168,11 +168,11 @@ bool parse_var_dec(plParser *ps)
     }
 
     RUN_PARSER(parsesym(ps, semicolonsym), 0);
-    
+
     return true;
 }
 
-bool parse_proc_dec(plParser *ps)      
+bool parse_proc_dec(plParser *ps)
 {
     if(!parsesym(ps, procsym))
         return false;
@@ -191,7 +191,7 @@ bool parse_proc_dec(plParser *ps)
     return true;
 }
 
-bool parse_statement(plParser *ps)     
+bool parse_statement(plParser *ps)
 {
     ps->current = add_parsetree_child(ps->current, ASSIGN_NODE);
     ParseTree *me = ps->current;
@@ -201,12 +201,12 @@ bool parse_statement(plParser *ps)
         ps->current = me;
         RUN_PARSER(parsesym(ps, becomessym), 0);
 
-        RUN_PARSER(parse_expression(ps), 0);
+        RUN_PARSER(parse_expression(ps), 5);
         ps->current = me;
         return true;
     }
-    else 
-    { 
+    else
+    {
         ps->current = me;
         if(parsesym(ps, callsym))
         {
@@ -282,8 +282,8 @@ bool parse_statement(plParser *ps)
 
     return true;
 }
-                                        
-bool parse_condition(plParser *ps)     
+
+bool parse_condition(plParser *ps)
 {
     ps->current = add_parsetree_child(ps->current, ODD_NODE);
     ParseTree *me = ps->current;
@@ -294,7 +294,7 @@ bool parse_condition(plParser *ps)
         ps->current = me;
         return true;
     }
-    
+
     RUN_PARSER(parse_expression(ps), 0);
     ps->current = me;
 
@@ -307,7 +307,7 @@ bool parse_condition(plParser *ps)
     return true;
 }
 
-bool parse_expression(plParser *ps)    
+bool parse_expression(plParser *ps)
 {
     ps->current = add_parsetree_child(ps->current, EXPRESSION_NODE);
     ParseTree *me = ps->current;
@@ -346,7 +346,7 @@ bool parse_expression(plParser *ps)
 
 }
 
-bool parse_term(plParser *ps)          
+bool parse_term(plParser *ps)
 {
     ps->current = add_parsetree_child(ps->current, TERM_NODE);
     ParseTree *me = ps->current;
@@ -376,7 +376,7 @@ bool parse_term(plParser *ps)
 
 }
 
-bool parse_factor(plParser *ps)        
+bool parse_factor(plParser *ps)
 {
     ParseTree *me = ps->current;
 
@@ -410,7 +410,7 @@ bool parse_factor(plParser *ps)
 #define DEBUG_TERMINAL_PARSER(...)
 #endif
 
-bool parsesym(plParser *ps, token_type symbol) 
+bool parsesym(plParser *ps, token_type symbol)
 {
     if(ps->index >= ps->symct)
         return false;
@@ -452,7 +452,7 @@ bool parse_rel_op(plParser *ps)
     switch(ps->symbols[ps->index]->symtype)
     {
         case eqsym:
-            add_parsetree_child(ps->current, EQ_NODE); 
+            add_parsetree_child(ps->current, EQ_NODE);
             break;
         case neqsym:
             add_parsetree_child(ps->current, NEQ_NODE);
