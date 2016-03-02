@@ -118,7 +118,7 @@ string append_sstr(string t, char c)
 
     if(len == alloc)
     {
-        alloc = len + 1000;
+        alloc = len*2;
 
         s = (unsigned char*) realloc(s, sizeof(unsigned char)*(alloc));
 

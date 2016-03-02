@@ -58,6 +58,12 @@ typedef struct pTree
 #define LTE_NODE PARSENODE (LTE)
 #define NEGATE_NODE PARSENODE (Negate)
 #define UNARY_NODE PARSENODE (Unary)
+#ifdef PL_SYNTAX_EXTENSION_SUPPORT
+#define OR_NODE PARSENODE (Or)
+#define AND_NODE PARSENODE (And)
+#define STR_LIT_NODE PARSENODE (StrLiteral)
+#define CHAR_LIT_NODE PARSENODE (CharLiteral)
+#endif
 
 
 ParseTree *new_parsetree(ParseTree t);
@@ -83,28 +89,37 @@ plParser *new_pl_parser(Symbol **symbols, unsigned int count);
 #define DEBUG_PARSER(x) 
 #endif
 
-#define PARSERROR(errmsg) { fprintf(stderr, "%s\n", __parserrors[errmsg]); exit(1); }
+#define PARSERROR(errmsg) { if(ps->index < ps->symct) {fprintf(stderr, "Failing on symbol #%d: \'%s\' ==> ", ps->index, ps->symbols[ps->index]->symbol);} fprintf(stderr, "%s\n", __parserrors[errmsg]); exit(1); }
 #define RUN_PARSER(x,errmsg) { DEBUG_PARSER(x) if( (x) == false) { PARSERROR(errmsg) }  }
 
 // ** Non-Terminal Consumption Parser **//
 
-bool parse_program(plParser *ps);       // ::= block "."
-bool parse_block(plParser *ps);         // ::= [const-dec] [var-dec] {proc-dec} statement
-bool parse_const_dec(plParser *ps);     // ::= "const" ident "=" number {"," ident "=" number} ";"
-bool parse_var_dec(plParser *ps);       // ::= "var" ident {"," ident} ";"
-bool parse_proc_dec(plParser *ps);      // ::= "procedure" ident ";" block ";"
-bool parse_statement(plParser *ps);     // ::= ident ":=" expression                              |
-                                        //     "call" ident                                       |
-                                        //     "begin" statement {";" statement} "end"            |
-                                        //     "if" condition "then" statement ["else" statement] |
-                                        //     "while" condition "do" statement                   |
-                                        //     "read" ident                                       |
-                                        //     "write" ident                                      |
-                                        //     empty                                              |
-bool parse_condition(plParser *ps);     // ::= "odd" expression | expression rel-op expression
-bool parse_expression(plParser *ps);    // ::= ["+"|"-"] term {("+"|"-") term}
-bool parse_term(plParser *ps);          // ::= factor {("*"|"/") factor}
-bool parse_factor(plParser *ps);        // ::= number | ident | "(" expression ")"
+bool parse_program(plParser *ps);     // ::= block "."
+bool parse_block(plParser *ps);       // ::= [const-dec] [var-dec] {proc-dec} statement
+bool parse_const_dec(plParser *ps);   // ::= "const" ident "=" number {"," ident "=" number} ";"
+bool parse_var_dec(plParser *ps);     // ::= "var" ident {"," ident} ";"
+bool parse_proc_dec(plParser *ps);    // ::= "procedure" ident "(" [ ident {"," ident} ] ")" ";" block ";"
+bool parse_statement(plParser *ps);   // ::= ident ":=" expression                               |
+                                      //     "call" ident  "(" [ expression {, expression} ] ")" |
+                                      //     "begin" statement {";" statement} "end"             |
+                                      //     "if" condition "then" statement                     
+                                      //     {"else if" condition "then" statement} 
+                                      //     ["else" statement]  
+                                      //     "while" condition "do" statement                    |
+                                      //     "read" ident                                        |
+                                      //     "write" expression                                  |
+                                      //     empty                                               |
+bool parse_expression(plParser *ps);   // ::= relationA {"or" relationA}
+/* Duplicate for multiple options */
+bool parse_condition(plParser *ps);   // ::= relationA {"or" relationA}
+#ifdef PL_SYNTAX_EXTENSION_SUPPORT
+bool parse_relationA(plParser *ps);   // ::= relation {"and" relation}
+bool parse_relation(plParser *ps);    // ::= "odd" expression0 | expression0 rel-op expression0
+bool parse_expression0(plParser *ps);  // ::= ["+"|"-"] term {("+"|"-") term}
+#endif
+bool parse_term(plParser *ps);        // ::= ["+"/"-"] factor {("*"|"/"|"%") ["+"/"-"] factor}
+bool parse_factor(plParser *ps);      // ::= number | ident | "(" expression ")" | 
+                                      //     "call" ident "(" [ expression {"," expression} ] ")"
 
 // ** Terminal Consumption Parsers **//
 
@@ -112,6 +127,9 @@ bool parsesym(plParser *ps, token_type symbol); // ::= symbol literal
 bool parse_ident(plParser *ps);
 bool parse_rel_op(plParser *ps);
 bool parse_number(plParser *ps);
+bool parse_literal(plParser *ps);
+bool parse_cliteral(plParser *ps);
+bool parse_sliteral(plParser *ps);
 
 
 #endif

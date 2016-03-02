@@ -120,6 +120,43 @@ SymbolStream *init_pl0_lexer()
              CREATE_LEXER(
                          new_lexnode(".")
                          ), periodsym );
+#ifdef PL_SYNTAX_EXTENSION_SUPPORT
+    add_lexer(pl0_symbols, string_literal(), strlitsym);
+    add_lexer(pl0_symbols, char_literal(), charlitsym);
+
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("%")
+                         ), modsym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("&")
+                         ), getatsym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("@")
+                         ), adrsym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("!")
+                         ), lnotsym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("[")
+                         ), lbracketsym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("]")
+                         ), rbracketsym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode("?")
+                         ), qmarksym);
+    add_lexer(pl0_symbols, 
+             CREATE_LEXER(
+                         new_lexnode(":")
+                         ), colonsym);
+#endif
 
     add_lexer(pl0_symbols,
              CREATE_LEXER(
@@ -187,7 +224,63 @@ SymbolStream *init_pl0_lexer()
                          alphabetical_character(),
                          _STAR(alphanumeric_character())
                          ), identsym );
-
+#ifdef PL_SYNTAX_EXTENSION_SUPPORT
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("c"),
+                         new_lexnode("h"),
+                         new_lexnode("a"),
+                         new_lexnode("r")
+                         
+                         ), charsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("l"),
+                         new_lexnode("n")
+                         
+                         ), lnsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("h"),
+                         new_lexnode("e"),
+                         new_lexnode("x")
+                         
+                         ), hexsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("o"),
+                         new_lexnode("c"),
+                         new_lexnode("t")
+                         
+                         ), octsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("b"),
+                         new_lexnode("i"),
+                         new_lexnode("n")
+                         
+                         ), binsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("s"),
+                         new_lexnode("t"),
+                         new_lexnode("r"),
+                         new_lexnode("i"),
+                         new_lexnode("n"),
+                         new_lexnode("g")
+                         
+                         ), stringsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("s"),
+                         new_lexnode("i"),
+                         new_lexnode("z"),
+                         new_lexnode("e"),
+                         new_lexnode("o"),
+                         new_lexnode("f")
+                         
+                         ), sizeofsym );
+#endif
     add_lexer(pl0_symbols,
              CREATE_LEXER(
                          new_lexnode("e"),
@@ -293,6 +386,32 @@ SymbolStream *init_pl0_lexer()
                          new_lexnode("e")
                          
                          ), whilesym );
+
+#ifdef PL_SYNTAX_EXTENSION_SUPPORT
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("a"),
+                         new_lexnode("n"),
+                         new_lexnode("d")
+                         
+                         ), andsym );
+
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("o"),
+                         new_lexnode("r")
+
+                         ), orsym );
+    add_lexer(pl0_symbols,
+             CREATE_LEXER(
+                         new_lexnode("r"),
+                         new_lexnode("e"),
+                         new_lexnode("t"),
+                         new_lexnode("u"),
+                         new_lexnode("r"),
+                         new_lexnode("n")
+                        ), returnsym);
+#endif
 
     add_lexer(pl0_symbols,
              CREATE_LEXER(

@@ -65,6 +65,8 @@ LexNode *alphabetical_character();
 LexNode *numeric_character();
 LexNode *alphanumeric_character();
 LexNode *whitespace();
+LexNode *string_literal();
+LexNode *char_literal();
 LexNode *c_style_comments();
 LexNode *repeat_node(LexNode *l);
 LexNode *optional_node(LexNode *l);

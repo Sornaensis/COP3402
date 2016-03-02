@@ -297,6 +297,61 @@ LexNode *whitespace()
     return new_lexnode(WHITESPACE);
 }
 
+LexNode *char_literal()
+{
+    LexNode *root = new_lexnode(""), 
+            *beginquote = new_lexnode("\'"),
+            *char_lit = new_lexnode(ALPHABET NUMERALS " ![]{}@#$%^&*()-_+=:;<>,./?|`~"),
+            *escape_slash = new_lexnode("\\"),
+            *escape_char  = new_lexnode("\\nt\'\"0"),
+            *endquote = new_lexnode("\'");
+
+    add_connection(root, beginquote);
+
+    add_connection(beginquote, char_lit);
+    add_connection(beginquote, escape_slash);
+
+    add_connection(char_lit, endquote);
+
+    add_connection(escape_slash, escape_char);
+
+    add_connection(escape_char, endquote);
+
+    endquote->end = true;
+
+    return root;
+}
+
+LexNode *string_literal()
+{
+    LexNode *root = new_lexnode(""), 
+            *beginquote = new_lexnode("\""),
+            *char_lit = new_lexnode(ALPHABET NUMERALS " ![]{}@#$%^&*()-_+=:;<>,./?|`~"),
+            *escape_slash = new_lexnode("\\"),
+            *escape_char  = new_lexnode("\\nt\'\""),
+            *endquote = new_lexnode("\"");
+
+    add_connection(root, beginquote);
+
+    add_connection(beginquote, char_lit);
+    add_connection(beginquote, escape_slash);
+    add_connection(beginquote, endquote);
+
+    add_connection(char_lit, char_lit);
+    add_connection(char_lit, escape_slash);
+    add_connection(char_lit, endquote);
+
+    add_connection(escape_slash, escape_char);
+
+    add_connection(escape_char, char_lit);
+    add_connection(escape_char, escape_slash);
+    add_connection(escape_char, endquote);
+
+    endquote->end = true;
+
+    return root;
+}
+
 LexNode *c_style_comments()
 {
     LexNode *root = new_lexnode("");
