@@ -4,16 +4,10 @@ Building
 In your favorite $SHELL >
 
     $ make 
-    $ ./pl0 [FILE] {-t|-s|-m|-a|-v}
 
-Rebuilding the project with ONLY the parameter extensions enabled:
-    $ make clean
+Building the project with ONLY the parameter extensions enabled:
+
     $ make params-only
-    $ ./pl0 [FILE] {-t|-s|-m|-a|-v}
-
-Running
-    $ make clean
-between builds is necessary to build the project with different settings.
 
 Invocation
 ----------
