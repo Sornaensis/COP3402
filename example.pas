@@ -24,7 +24,7 @@ procedure Power(base, exponent);
     end;
 procedure CheekyProc();
     var dec[5],el,doe;
-    begin
+    begin /* Guess what this function does */
         doe := call Power(3,8);
         dec := doe * 2 - 478;
         el := 101;
@@ -47,7 +47,7 @@ procedure CheekyProc();
                 else
                     el := el - 1;
 
-                dec[ el = 0 ? 2*2-5 : el%5 ] := dec[ el = 0 ? -1*10+3*3 : el%5 ] + (doe - el = doe ? 6 : doe*2-3%4);
+                /* --> */ dec[ el = 0 ? 2*2-5 : el%5 ] := dec[ el = 0 ? -1*10+3*3 : el%5 ] + (doe - el = doe ? 6 : doe*2-3%4);
             end;
     end;
 procedure Max3t(a,b,c);
